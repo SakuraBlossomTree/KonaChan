@@ -1,13 +1,9 @@
-import praw
-import time
-from RedDownloader import RedDownloader
-import requests
-import os
+__author__ = "SakuraBlossomTree"
 
-def slow_print(text, delay):
-    for char in text:
-        print(char, end='', flush=True)
-        time.sleep(delay)
+from bs4 import BeautifulSoup
+import requests
+from urllib.parse import urljoin
+import os
 
 def intro():
 
@@ -17,103 +13,61 @@ def intro():
 
     print("It uses reddit and praw to able to download static images, reddit and RedDownloader for live wallpapers\n\n")
 
-def praw_images():
+def images():
+    tags = str(input("Enter your tags: "))
 
-    command = str(input("Do you want live wallpapers(y/n):- "))
+    limit = int(input("Enter your amount of pics: "))
+    
+    base_url = "https://safebooru.org/index.php?page=post&s=list&tags=" + tags
 
-    search = str(input("Enter your search:- "))
+    print(base_url)
 
-    reddit = praw.Reddit(
+    response = requests.get(base_url)
 
-           client_id="X.X.X.X",
-           client_secret="X.X.X.X",
-           user_agent="X.X.X.X"
+    soup = BeautifulSoup(response.content , "html.parser")
 
-)
+    image_elements = soup.find_all("img" , class_="preview")
 
-    global sub
+    count = 0
 
-    if command == 'y':
+    for element in image_elements:
 
-        sub = "AnimewallpaperGif"
+        if count >= limit:
 
-        i = 0
+            break
 
-        print(search)
+        image_page_url = urljoin(base_url , element.parent["href"])
 
-        subreddit = reddit.subreddit(sub)
+        image_response = requests.get(image_page_url)
 
-        for submission in subreddit.search(search):
+        image_soup = BeautifulSoup(image_response.content, 'html.parser')
 
-            url = "https://reddit.com"+submission.permalink
+        actual_image_element = image_soup.find('img' , id='image')
 
-            # print(url)
+        if actual_image_element:
 
-            i = str(i)
+            actual_image_url = actual_image_element['src']
+            print(actual_image_url)
+            save_image(actual_image_url)
+            count += 1
 
-            RedDownloader.Download(url , output=i , destination="../booru/vids/")        
+def save_image(url):
 
-            i = int(i)
+    response = requests.get(url)
 
-            i += 1
+    if response.status_code == 200:
 
-    elif command == 'n':
+        filename = url.split('/')[-1]
 
-        sub = "Animewallpaper"
-
-        already_done = []
-
-        i = 0
-
-        subreddit = reddit.subreddit(sub)
-
-        for submission in subreddit.search(search):
-
-            # print(submission.url)
-
-            result = submission.url
-
-            if '.jpg' in submission.url:
-
-                if submission.link_flair_text == "Desktop":
-
-                    if submission.id not in already_done:
-
-                        already_done.append(result)
-
-                        # results.append(submission.url)
-
-                        i = str(i)
-
-                        with open('../booru/pics/'+i+'.jpg' , 'wb') as f:
-                            response = requests.get(result)
-                            f.write(response.content)
-                        print("Image saved successfully")
-
-                        i = int(i)
-
-                        i += 1
-
-                    else:
-                        print("Image downaloaded skipping")
-
-                else:
-                    print("Skipped because wrong flair")
-
-            else:
-                print("Skipped wrong file type")
+        with open(os.path.join('./pics/', filename) , 'wb') as f:
+            f.write(response.content)
+            print(f"Saved image: {filename}")
 
     else:
 
-        print("Invalid command")
-
-    
-
-def is_image_file(file_path):
-
-    extension = os.path.splitext(file_path)[1].lower()
-    return extension == '.jpg' or extension == '.png'
+        print(f"Failed to download image: {url}")
 
 intro();
 
-praw_images();
+images();
+

@@ -1,0 +1,36 @@
+__author__ = "SakuraBlossomTree"
+
+import time
+import urllib.request
+from bs4 import BeautifulSoup
+import os
+
+def slow_print(text, delay):
+    for char in text:
+        print(char, end='', flush=True)
+        time.sleep(delay)
+
+def intro():
+
+    print("This is Ishitori\n")
+
+    print("A simple terminal-based Anime Wallpaper Downloader\n")
+
+    print("It uses reddit and praw to able to download static images, reddit and RedDownloader for live wallpapers\n\n")
+
+def images():
+
+    tags = str(input("Enter your tags: "))
+
+    limit = int(input("Enter your limit: "))
+
+    limit = str(limit)
+
+    base_url = "https://safebooru.org/index.php?page=post&s=list&tags=" + tags + "&limit=" + limit
+
+    print(base_url)
+
+
+    
+intro();
+
