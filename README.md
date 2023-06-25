@@ -34,7 +34,7 @@ Static pictures are saved in the ```pics/```
 If you want to also system link it you can do it by using this command 
 
 ```
-ln -s $HOME/Ishtori/ /usr/local/bin/link_name
+ln -s $HOME/KonaChan/ /usr/local/bin/link_name
 ```
 
 Change the link_name to your desired name
