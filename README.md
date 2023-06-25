@@ -1,4 +1,4 @@
-<h1>Ishitori - イシトリ</h1>
+<h1>KonaChan - こなちゃん</h1>
 
 <h2>Rewrote the entire program</h2>
 
@@ -8,7 +8,7 @@
 
 <p>A project which I started because i wanted a terminal based wallpaper downloader of my own uses</p>
 
-<p>But I am making this project which is named Ishitori open-sourced so that everyone can use it</p>
+<p>But I am making this project which is named KonaChan open-sourced so that everyone can use it</p>
 
 <br/>
 
@@ -16,7 +16,7 @@
 
 ```
 
-git clone git@github.com:SakuraBlossomTree/Ishitori.git
+git clone git@github.com:SakuraBlossomTree/KonaChan.git
 
 cd Ishitori
 
